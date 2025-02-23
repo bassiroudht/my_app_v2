@@ -12,7 +12,6 @@ st.markdown("""
  **Source:** [CoinAfrique](https://sn.coinafrique.com/)
 """)
 
-# Background function
 def add_bg_from_local(image_file):
     with open(image_file, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read())
@@ -28,7 +27,6 @@ def add_bg_from_local(image_file):
     unsafe_allow_html=True
     )
 
-# Function to load data (for downloading)
 @st.cache_data
 def convert_df(df):
     return df.to_csv().encode('utf-8')
@@ -44,7 +42,6 @@ def load(dataframe, title, key, key1):
         st.write('Data dimension: ' + str(dataframe.shape[0]) + ' rows and ' + str(dataframe.shape[1]) + ' columns.')
         st.dataframe(dataframe)
 
-# Function to scrape chien data
 def load_chien_data(mul_page):
     df = pd.DataFrame()
     for p_index in range(1, int(mul_page) + 1):
@@ -72,7 +69,6 @@ def load_chien_data(mul_page):
         df = pd.concat([df, DF], axis=0).reset_index(drop=True)
     return df
 
-# Function to scrape mouton data
 def load_mouton_data(mul_page):
     df = pd.DataFrame()
     for p_index in range(1, int(mul_page) + 1):
@@ -100,22 +96,18 @@ def load_mouton_data(mul_page):
         df = pd.concat([df, DF], axis=0).reset_index(drop=True)
     return df
 
-# Sidebar inputs
 st.sidebar.header('Préférences')
 Pages = st.sidebar.selectbox('Pages', list([int(p) for p in np.arange(1, 20)]))
 Choices = st.sidebar.selectbox('Options', ['Scraper avec BeautifulSoup', 'Télécharger les données',  'Remplir le formulaire Kobo','Remplir le formulaire Google Forms'])
 
-# Background image
 add_bg_from_local('background.png')
 
-# Load custom CSS
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 local_css('style.css')
 
-# Main logic for options
 if Choices == 'Scraper avec BeautifulSoup':
     chien_data_mul_pag = load_chien_data(Pages)
     mouton_data_mul_pag = load_mouton_data(Pages)
